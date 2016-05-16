@@ -1,6 +1,6 @@
 var React = require('react');
 
-var TimerClock = React.createClass({
+var Clock = React.createClass({
 
   getDefaultProps: function(){
     totalSeconds: 0;
@@ -33,4 +33,4 @@ var TimerClock = React.createClass({
 
 });
 
-module.exports = TimerClock;
+module.exports = Clock;
