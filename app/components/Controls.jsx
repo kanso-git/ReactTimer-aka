@@ -3,8 +3,15 @@ var React = require('react');
 
 
 var Controls = React.createClass({
-
+  getDefaultProps: function() {
+     return {
+       timerState: 'paused',
+       screenName: ''
+     };
+   },
  propTypes:{
+   timerState:React.PropTypes.string,
+   screenName:React.PropTypes.string.isRequired,
    countdownState:React.PropTypes.string.isRequired,
    onStatusChange:React.PropTypes.func.isRequired,
  },
@@ -14,14 +21,25 @@ var Controls = React.createClass({
 
   },
  render: function(){
-    var {countdownState} = this.props;
+    var {countdownState,timerState,screenName} = this.props;
    //up
     var renderStartStopButton = ()=>{
-       if(countdownState === 'started'){
-         return   <button className="button secondary hollow expanded" onClick={this.onStatusChange('paused')}>Pause</button>;
-       }else if(countdownState == 'paused'){
-         return   <button className="button  expanded" onClick={this.onStatusChange('started')}>Start</button>;
-       }
+      switch (screenName) {
+        case 'countdown':
+        if(countdownState === 'started'){
+          return   <button className="button secondary hollow expanded" onClick={this.onStatusChange('paused')}>Pause</button>;
+        }else if(countdownState == 'paused'){
+          return   <button className="button  expanded" onClick={this.onStatusChange('started')}>Start</button>;
+        }
+        break;
+        case 'timer':
+        if(timerState === 'started'){
+          return   <button className="button secondary hollow expanded" onClick={this.onStatusChange('paused')}>Pause</button>;
+        }else if(timerState == 'paused'){
+          return   <button className="button  expanded" onClick={this.onStatusChange('started')}>Start</button>;
+        }
+        break;
+      }
     };
 
     return (

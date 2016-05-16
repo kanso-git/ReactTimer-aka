@@ -20,7 +20,7 @@ describe('Countdown', () => {
       countdown.handleCountdown(3);
       expect(countdown.state.countdownState).toBe('started');
       expect(countdown.state.totalSeconds).toBe(3);
-      
+
       setTimeout(()=>{
         expect(countdown.state.countdownState).toBe('started');
         expect(countdown.state.totalSeconds).toBe(2);
@@ -32,5 +32,25 @@ describe('Countdown', () => {
         done();
       },4001);
     });
+
+
+    it('should puase countdown timer when timer is paused ', (done) => {
+      var countdown = TestUtils.renderIntoDocument(<Countdown/>);
+      countdown.handleCountdown(3);
+      expect(countdown.state.countdownState).toBe('started');
+      expect(countdown.state.totalSeconds).toBe(3);
+
+      setTimeout(()=>{
+        countdown.setState({countdownState:'paused'})
+      },1001);
+
+      setTimeout(()=>{
+        expect(countdown.state.countdownState).toBe('paused');
+        expect(countdown.state.totalSeconds).toBe(2);
+        done();
+      },4001);
+    });
+
+
  });
 }); // end describe formatSeconds
