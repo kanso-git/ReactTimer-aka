@@ -1,41 +1,99 @@
 var React = require('react');
 var Clock = require('Clock');
 var CountdownForm = require('CountdownForm');
+var Controls = require('Controls');
 
 var Countdown = React.createClass({
 
+/*
   getDefaultProps: function() {
     return {
-      totalSeconds: 0
+      totalSeconds: 0,
+      countdownState:'stopped'
     };
   },
+  */
 
   getInitialState: function(){
     return {
-      totalSeconds:0
-
+      totalSeconds:0,
+      countdownState:'stopped'
     };
   },
+ componentWillUpdate:function(nextProps, nextState){
+    //console.log(JSON.stringify(nextProps,null,5));
+    //console.log(JSON.stringify(nextState,null,5));
+ },
+  componentDidUpdate: function(prevProps,prevState){
+    //console.log(JSON.stringify(prevProps,null,5));
+    //console.log(JSON.stringify(prevState,null,5));
+
+    if(this.state.countdownState != prevState.countdownState){
+    switch (this.state.countdownState) {
+      case 'started':
+        this.startCountDownTimer();
+        console.log("started counting dwon.. ");
+        break;
+      case 'stopped':
+        this.setState({totalSeconds:0});
+       case 'paused':
+       clearInterval(this.clockTimer);
+       this.clockTimer = undefined;
+       break;
+    }
+   }
+  },
   handleCountdown: function(aTotalSeconds){
-      var self =this;
-      self.setState({totalSeconds:aTotalSeconds});
-      var refreshIntervalId =setInterval(function(){
-        if(aTotalSeconds>0){
-         aTotalSeconds = aTotalSeconds -1;
-         self.setState({totalSeconds:aTotalSeconds});
-       }else{
-         self.setState({totalSeconds:0});
-         clearInterval(refreshIntervalId);
-       }
-      },1000);
+      this.setState({
+        totalSeconds:aTotalSeconds,
+        countdownState:'started'
+      });
+  },
+  startCountDownTimer: function(){
+      this.clockTimer = setInterval(()=>{
+      console.log("inside the startCountDownTimer ...");
+      var aTotalSeconds = this.state.totalSeconds - 1;
+      if(aTotalSeconds>0){
+       this.setState({totalSeconds:aTotalSeconds});
+      }else{
+       this.setState({totalSeconds:0,countdownState:'stopped'});
+       //this.setState({totalSeconds:0});
+     }
+    },1000);
   },
 
+ handleStatusChange: function(aNewState, myName){
+   this.setState({countdownState :aNewState});
+ },
+
+
+ componentWillMount:function(){
+    console.log("componentWillMount  ");
+ },
+
+ componentDidMount:function(){
+    console.log("componentDidMount ");
+ },
+ componentWillUnmount:function(){
+    console.log("componentWillUnmount clearInterval clockTimer ");
+    if(this.clockTimer){
+      clearInterval(this.clockTimer);
+      this.clockTimer = undefined;
+    }
+ },
   render: function(){
-  var {totalSeconds } = this.state;
+  var {totalSeconds, countdownState} = this.state;
+  var renderControlArea= ()=>{
+    if(countdownState !=='stopped'){
+      return <Controls countdownState={countdownState} onStatusChange={this.handleStatusChange}/>;
+    }else{
+      return <CountdownForm onNewCountDown={this.handleCountdown}/>;
+    }
+  };
     return (
-          <div >
+          <div>
            <Clock totalSeconds={totalSeconds}/>
-           <CountdownForm onNewCountDown={this.handleCountdown} />
+           {renderControlArea()}
           </div>
         );
       }
