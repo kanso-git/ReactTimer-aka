@@ -1,10 +1,14 @@
-//color
+//colors
 $grey:#333333;
 $white:#ffffff;
+$blue:#B5D0E2;
 
-//navigation color
+// Navigation colors
 $nav-background:$grey;
+$nav-text-color :$white;
 
 
-//menu text color
-$menu-text-color :$white;
+//Timer Clock variables
+$timerClock-text-color:$white;
+$timerClock-bg-color:$blue;
+$timerClock-border-color:#2099E8;
